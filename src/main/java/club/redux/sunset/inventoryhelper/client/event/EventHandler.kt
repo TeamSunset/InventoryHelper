@@ -17,7 +17,7 @@ object EventHandler {
 
             val click = { slot: Int, button: Int, actionType: SlotActionType ->
                 client.interactionManager?.clickSlot(
-                    player.currentScreenHandler.syncId,
+                    screen.screenHandler.syncId,
                     slot,
                     button,
                     actionType,
@@ -32,18 +32,26 @@ object EventHandler {
                 slots[3],
                 slots[4],
             )
-
-            if (client.currentScreen == null && stringSlots.sumOf { it.stack.count } >= 4) {
-                stringSlots.forEach {
-                    click(it.id, 0, SlotActionType.PICKUP)
-                    click(it.id, 0, SlotActionType.QUICK_CRAFT)
-                    craftingSlots.filter { slot -> slot.stack.item == Items.AIR }.forEach { slot ->
-                        click(slot.id, 1, SlotActionType.QUICK_CRAFT)
+            val otherSlots = slots.filter { it !in craftingSlots }
+            if (otherSlots.any { it.stack.item == Items.AIR }) {
+                if (stringSlots.sumOf { it.stack.count } >= 4) {
+                    stringSlots.forEach {
+                        click(it.id, 0, SlotActionType.PICKUP)
+                        click(it.id, 0, SlotActionType.QUICK_CRAFT)
+                        craftingSlots.filter { slot -> slot.stack.item == Items.AIR }.forEach { slot ->
+                            click(slot.id, 1, SlotActionType.QUICK_CRAFT)
+                        }
+                        click(it.id, 2, SlotActionType.QUICK_CRAFT)
                     }
-                    click(it.id, 2, SlotActionType.QUICK_CRAFT)
-                }
-                if (slots[0].stack.item != Items.AIR) {
-                    click(0, 0, SlotActionType.QUICK_MOVE)
+                    if (slots[0].stack.item != Items.AIR) {
+                        click(0, 0, SlotActionType.QUICK_MOVE)
+                    }
+                } else {
+                    craftingSlots.forEach {
+                        if (it.stack.item != Items.AIR) {
+                            click(it.id, 0, SlotActionType.QUICK_MOVE)
+                        }
+                    }
                 }
             }
         }
