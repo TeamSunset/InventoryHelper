@@ -33,7 +33,7 @@ object EventHandler {
                 slots[4],
             )
 
-            if (client.currentScreen !is InventoryScreen && stringSlots.sumOf { it.stack.count } >= 4) {
+            if (client.currentScreen == null && stringSlots.sumOf { it.stack.count } >= 4) {
                 stringSlots.forEach {
                     click(it.id, 0, SlotActionType.PICKUP)
                     click(it.id, 0, SlotActionType.QUICK_CRAFT)
