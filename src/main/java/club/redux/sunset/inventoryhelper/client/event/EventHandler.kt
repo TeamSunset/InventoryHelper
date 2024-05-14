@@ -33,7 +33,7 @@ object EventHandler {
                 slots[4],
             )
             val otherSlots = slots.filter { it !in craftingSlots }
-            if (otherSlots.any { it.stack.item == Items.AIR }) {
+            if (screen.screenHandler == null && otherSlots.any { it.stack.item == Items.AIR }) {
                 if (stringSlots.sumOf { it.stack.count } >= 4) {
                     stringSlots.forEach {
                         click(it.id, 0, SlotActionType.PICKUP)
